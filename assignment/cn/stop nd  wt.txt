@@ -1,0 +1,46 @@
+sender side stop and wait
+
+
+
+
+
+
+begin
+   canSend = True;        //Allow the first frame to be sent
+   while (true)           //check repeatedly
+   do
+      Wait_For_Event();   //wait for availability of packet
+      if ( Event(Request_For_Transfer) AND canSend) then
+         Get_Data_From_Network_Layer();
+         Make_Frame();
+         Send_Frame_To_Physical_Layer();
+         canSend = False;
+      else if ( Event(Acknowledgement_Arrival)) then
+         Receive_ACK();
+         canSend = True;
+      end if
+   end while
+end
+
+
+
+
+sender side stop and wait
+
+
+
+
+
+
+begin
+   while (true)      //check repeatedly
+   do
+      Wait_For_Event();     //wait for arrival of frame
+      if ( Event(Frame_Arrival) then
+         Receive_Frame_From_Physical_Layer();
+         Extract_Data();
+         Deliver_Data_To_Network_Layer();
+         Send_ACK();
+      end if
+   end while
+end
